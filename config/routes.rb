@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
+  resources :events
+
    root 'welcome#index'
    get '/auth/:provider/callback' => 'sessions#create'
-  # Example of regular route:
+   get '/logout' => 'sessions#destroy', as: :logout
+   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
