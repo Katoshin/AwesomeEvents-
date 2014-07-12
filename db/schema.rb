@@ -11,7 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140708185312) do
+ActiveRecord::Schema.define(version: 20140712060745) do
+
+  create_table "checks", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "music_id",   null: false
+    t.string   "comment"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "checks", ["music_id", "user_id"], name: "index_checks_on_music_id_and_user_id", unique: true
+  add_index "checks", ["user_id", "music_id"], name: "index_checks_on_user_id_and_music_id", unique: true
 
   create_table "events", force: true do |t|
     t.integer  "owner_id"
@@ -25,6 +36,17 @@ ActiveRecord::Schema.define(version: 20140708185312) do
   end
 
   add_index "events", ["owner_id"], name: "index_events_on_owner_id"
+
+  create_table "musics", force: true do |t|
+    t.integer  "owner_id"
+    t.string   "url",        null: false
+    t.string   "title"
+    t.string   "thumbnail"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "musics", ["owner_id"], name: "index_musics_on_owner_id"
 
   create_table "tickets", force: true do |t|
     t.integer  "user_id"

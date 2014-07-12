@@ -1,16 +1,16 @@
 <div class="page-header">
-	<h1>イベント一覧</h1>
+	<h1>新着聞きたいYO!</h1>
 </div>
 <div class="list-group">
-	<% @events.each do |event| %>
-		<%= link_to(event, class: 'list-group-item') do %>
+	<% @musics.each do |music| %>
+		<%= link_to(music, class: 'list-group-item') do %>
 			<h4 class="list-group-item-text"> 
-				<%= event.name %>
+				<%= music.url %>
 			</h4>
 			<p class="list-group-item-text">
-				<%= event.start_time.strftime('%Y/%m/%d %H:%M') %> - <%= event.end_time.strftime('%Y/%m/%d %H:%M') %>
+				<%= music.url %> 
 			</p>
 		<% end %>
 	<% end %>
-	<%= paginate @events %>
+	<%= paginate @musics %>
 </div>

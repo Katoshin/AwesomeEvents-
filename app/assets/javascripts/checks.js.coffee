@@ -1,3 +1,4 @@
+
 $(document).on 'ajax:success', '#createCheck', (xhr, data, status) ->
   location.reload()
 

@@ -1,0 +1,91 @@
+<div class="page-header">
+	<h1>
+		<%= @music.title %>
+	</h1>
+</div>
+<div class="row">
+	<div class="col-md-8">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				主催者
+			</div>
+			<div class="panel-body">
+				<% if @music.owner %>
+					<%= link_to("https://twitter.com/#{@music.owner.nickname}") do %>
+						<%= image_tag @music.owner.image_url %>
+						<%= "@#{@music.owner.nickname}" %>
+					<% end %>
+				<% else %>
+					退会したユーザーです
+				<% end %>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				リクエスト
+			</div>
+			<div class="panel-body">
+				<iframe
+					src="<%= @music.url %>"
+					frameborder="0" allowfullscreen></iframe>
+			</div>
+		</div>	
+	</div>
+	<div class="col-md-4">
+		<% if @music.created_by?(current_user) %>
+			<%= link_to '聞きたいYO!を削除する', music_path(@music), class: 'btn btn-danger btn-lg btn-block', method: :delete, data: { confirm: '本当に削除しますか？'} %>
+		<% end %>
+		<% if @check %>
+			<%= link_to 'チェケラを取り消す', music_check_path(@music, @check),method: :delete, Class: 'btn btn-warning btn-lg btn-block' %>
+			<% elsif logged_in? %>
+			<button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#createCheck">
+				チェケラ！
+			</button>
+			<div id="createCheck" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialogHeader" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h4 id="dialogHeader" class="modal-title">参加コメント</h4>
+						</div>
+						<%= form_for(@music.checks.build, url: music_checks_path(@music), remote: true) do |f| %>	
+							<div class="modal-body">
+								<%= f.text_field :comment, class: 'form-control' %>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+								<%= f.button '送信', class: 'btn btn-primary', data: { disable_with: '送信中...' } %>
+							</div>
+						<% end %>
+					</div>
+				</div>
+			</div>
+		<% else %>
+			<%= link_to 'チェケラ！', new_music_check_path(@music), class: "btn btn-primary btn-lg btn-block" %>
+		<% end %>
+		<hr>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+			  チェケラー
+			</div>
+			<div class="panel-body">
+				<ul class="list-unstyled">
+					<% @checks.each do |check| %>
+						<% if check.user %>
+							<li>
+								<%= link_to(url_for_twitter(check.user)) do %>
+									<%= image_tag check.user.image_url, width: 20, height: 20 %>
+									<%= "@#{check.user.nickname}" %>
+								<% end %>
+								<%= check.comment %>
+							</li>
+						<% else %>
+							退会したユーザーです
+						<% end %>
+					<% end %>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

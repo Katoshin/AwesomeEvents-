@@ -1,9 +1,9 @@
 class User < ActiveRecord::Base
-	before_destroy :check_all_events_finished
+	before_destroy :check_all_musics_finished
 	
-	has_many :created_events, class_name: 'Event', foreign_key: :owner_id, dependent: :nullify
-	has_many :tickets, dependent: :nullify
-	has_many :participating_events, through: :tickets, source: :event
+	has_many :created_musics, class_name: 'Music', foreign_key: :owner_id, dependent: :nullify
+	has_many :checks, dependent: :nullify
+	has_many :participating_musics, through: :checks, source: :music
 
 	def self.find_or_create_from_auth_hash(auth_hash)
     provider = auth_hash[:provider]
@@ -16,16 +16,4 @@ class User < ActiveRecord::Base
       user.image_url = image_url
     end
   end
-
-	def check_all_events_finished
-		now = Time.zone.now
-		if created_events.where(':now < end_time', now: now).exists?
-			errors[:base] << '公開中のイベントが存在します。'
-		end
-
-		if participating_events.where(':now < end_time', now)
-			errors[:base] << '未終了の参加イベントが存在します。'
-		end
-		errors.blank?
-	end
 end
